@@ -9,7 +9,7 @@ import { OrdersController } from './controllers/orders/orders.controller';
 
 @Module({
   imports: [
-        MongooseModule.forRoot('mongodb://localhost/ecommerce'),
+        MongooseModule.forRoot('mongodb://127.0.0.1:27017/ecommerce'),
         ProductsModule, OrdersModule
     ],
   controllers: [AppController, ProductsController, OrdersController],
