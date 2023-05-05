@@ -6,15 +6,15 @@ import { ProductDTO, ProductIdDTO } from "./products.dto";
 export class ProductsController {
   constructor(private productsService: ProductsService) { }
 
-  @Get()
+  @Get('/all')
   async findAll() {
     let all_products = await this.productsService.findAll();
     return all_products;
   }
 
-  @Get('/:id')
-  async findById(@Query() id: ProductIdDTO){
-    return await this.productsService.findById(id)
+  @Get()
+  async findById(@Query() productId: ProductIdDTO){
+    return await this.productsService.findById(productId)
   }
 
   @Post('/create')
@@ -23,12 +23,12 @@ export class ProductsController {
   }
 
   @Post('/update')
-  async update(@Query() id: ProductIdDTO, @Body() product: ProductDTO){
-    return await this.productsService.update(id, product)
+  async update(@Query() productId: ProductIdDTO, @Body() product: ProductDTO){
+    return await this.productsService.update(productId, product)
   }
 
   @Post('/delete')
-  async delete(@Query() id: ProductIdDTO){
-    return await this.productsService.delete(id)
+  async delete(@Query() productId: ProductIdDTO){
+    return await this.productsService.delete(productId)
   }
 }

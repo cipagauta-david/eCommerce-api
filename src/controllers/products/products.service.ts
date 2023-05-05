@@ -8,39 +8,37 @@ import { ProductDTO, ProductIdDTO } from './products.dto';
 export class ProductsService {
   constructor(@InjectModel('Product') private readonly productModel: Model<Product>) { }
 
-  async create(product: ProductDTO): Promise<Product> {
-    const createdProduct = new this.productModel(product);
-    await createdProduct.save();
-    return createdProduct;
-  }
-
   async findAll(): Promise<Product[]> {
     return this.productModel.find().exec()
   }
 
-  async findById(id: ProductIdDTO): Promise<Product> {
+  async findById(productId: ProductIdDTO): Promise<Product> {
     try {
-      return this.productModel.findById(id).exec()
+      return this.productModel.findById(productId.id).exec()
     } catch (error) {
-      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR)
     }
   }
 
-  async update(id: ProductIdDTO, data: ProductDTO): Promise<Product> {
+  async create(product: ProductDTO): Promise<Product> {
+    return await (new this.productModel(product)).save()
+  }
+
+  async update(productId: ProductIdDTO, product: ProductDTO): Promise<Product> {
     try {
-      return await this.productModel.findByIdAndUpdate(id, data, {
+      return await this.productModel.findByIdAndUpdate(productId.id, product, {
         new: true
-      }).exec();
+      }).exec()
     } catch (error) {
-      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR)
     }
   }
 
-  async delete(id: ProductIdDTO): Promise<any> {
+  async delete(productId: ProductIdDTO): Promise<any> {
     try {
-      return await this.productModel.findByIdAndRemove(id).exec();
+      return await this.productModel.findByIdAndRemove(productId.id).exec()
     } catch (error) {
-      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR)
     }
   }
 
