@@ -1,10 +1,10 @@
 import * as mongoose from 'mongoose';
 
 export const productSchema = new mongoose.Schema({
-  title: String,
-  description: String,
+  title: { type: String, required: true },
+  description: { type: String, required: true },
   image: String,
-  price: Number,
+  price: { type: Number, default: 0 },
   createdAt: { 
     type: Date,
     default: Date.now

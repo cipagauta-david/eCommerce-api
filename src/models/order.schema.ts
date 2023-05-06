@@ -1,15 +1,13 @@
 import * as mongoose from 'mongoose';
 export const orderSchema = new mongoose.Schema({
 
-  totalPrice: {
-    type: Number,
-    required: true
-  },
+  totalPrice: { type: Number, required: true },
   products: [
     {
       product: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Product'
+        ref: 'Product',
+        required: true
       },
       quantity: {
         type: Number,
