@@ -6,28 +6,29 @@ import { OrderDTO, OrderIdDTO } from "./orders.dto";
 export class OrdersController {
   constructor(private ordersService: OrdersService) { }
 
-  @Get()
+  @Get('/all')
   async findAll() {
     return await this.ordersService.findAll();
   }
 
-  @Get('/:id')
-  async findById(@Query() id: OrderIdDTO){
-    return await this.ordersService.findById(id)
+  @Get()
+  async findById(@Query() orderId: OrderIdDTO){
+    console.log(orderId)
+    return await this.ordersService.findById(orderId)
   }
 
   @Post('/create')
-  async create(@Body() data: OrderDTO){
-    return await this.ordersService.create(data)
+  async create(@Body() order: OrderDTO){
+    return await this.ordersService.create(order)
   }
 
   @Post('/update')
-  async update(@Query() id: OrderIdDTO, @Body() data: OrderDTO){
-    return await this.ordersService.update(id, data)
+  async update(@Query() orderId: OrderIdDTO, @Body() order: OrderDTO){
+    return await this.ordersService.update(orderId, order)
   }
 
   @Post('/delete')
-  async delete(@Query() id: OrderIdDTO){
-    return await this.ordersService.delete(id)
+  async delete(@Query() orderId: OrderIdDTO){
+    return await this.ordersService.delete(orderId)
   }
 }

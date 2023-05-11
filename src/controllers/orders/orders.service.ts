@@ -13,37 +13,55 @@ export class OrdersService {
     return this.orderModel.find().exec()
   }
 
-  async findById(id: OrderIdDTO): Promise<Order> {
+  async findById(orderId: OrderIdDTO): Promise<Order> {
     try {
-      return this.orderModel.findById(id).exec()
+      return await this.orderModel.findById(orderId.id).exec()
     } catch (error) {
       throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
-  async create(data: OrderDTO): Promise<Order> {
+  async create(order: OrderDTO): Promise<Order> {
     let new_order = {
-      totalPrice: data.totalPrice,
-      products: [
-        {
-          product: data.product,
-          quantity: data.quantity
-        }
-      ]
+      totalPrice: order.totalPrice,
+      products: []
     }
-    const Order = new this.orderModel(new_order)
-    return await Order.save()
-    //return await (new this.orderModel(data)).save()
+    order.products.map(product => new_order.products.push(
+      {
+        product: product[0],
+        quantity: product[1]
+      }))
+    return await (new this.orderModel(new_order)).save()
   }
 
-  async update(id: OrderIdDTO, data: OrderDTO): Promise<Order> {
-    let updated_order = {
-      ...(data.totalPrice && {
-        totalPrice: data.totalPrice
-      }),
+  async update(orderId: OrderIdDTO, new_order: OrderDTO): Promise<Order> {
+    let old_order = await this.findById(orderId)
+
+    new_order.totalPrice ? old_order['totalPrice'] = new_order.totalPrice : null
+
+    // this is slower
+    // new_order.products ? old_order['products'] = new_order.products : null
+
+    // this is faster
+    let len = new_order.products.length
+    if (new_order.products.length < old_order.products.length) {
+      old_order.products = old_order.products.slice(0, len - old_order.products.length)
+    } else if (new_order.products.length > old_order.products.length) {
+      len = old_order.products.length
+      old_order.products = old_order.products.concat(new_order.products.slice(len))
     }
+
+    for (let i = 0; i < len; i++) {
+      if (new_order.products[i].product != old_order.products[i].product) {
+        old_order.products[i].product = new_order.products[i].product
+      }
+      if (new_order.products[i].quantity != old_order.products[i].quantity) {
+        old_order.products[i].quantity = new_order.products[i].quantity
+      }
+    }
+
     try {
-      return this.orderModel.findOneAndUpdate(id, updated_order, {
+      return await this.orderModel.findByIdAndUpdate(orderId.id, old_order, {
         new: true
       }).exec()
     } catch (error) {
@@ -51,9 +69,9 @@ export class OrdersService {
     }
   }
 
-  async delete(id: OrderIdDTO): Promise<Order> {
+  async delete(orderId: OrderIdDTO): Promise<Order> {
     try {
-      return this.orderModel.findByIdAndRemove(id).exec()
+      return await this.orderModel.findByIdAndRemove(orderId.id).exec()
     } catch (error) {
       throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
