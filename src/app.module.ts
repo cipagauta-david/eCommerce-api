@@ -6,18 +6,21 @@ import { ProductsModule } from './controllers/products/products.module';
 import { ProductsController } from './controllers/products/products.controller';
 import { OrdersModule } from './controllers/orders/orders.module';
 import { OrdersController } from './controllers/orders/orders.controller';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
-        // MongooseModule.forRoot('mongodb://127.0.0.1:27017/ecommerce'),
-        MongooseModule.forRoot('mongodb://mongo:3z1V6cNoz9bDnQ6e0pgI@containers-us-west-55.railway.app:6551',{
-          user:'mongo',
-          pass:'3z1V6cNoz9bDnQ6e0pgI',
-          dbName:'ecommerce'
-        }),
-        ProductsModule, OrdersModule
-    ],
+    ConfigModule.forRoot({
+      envFilePath: '.env',
+    }),
+    MongooseModule.forRoot(process.env.MONGO_URL, {
+      user: process.env.MONGO_USER,
+      pass: process.env.MONGO_PASS,
+      dbName: 'ecommerce'
+    }),
+    ProductsModule, OrdersModule
+  ],
   controllers: [AppController, ProductsController, OrdersController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }
