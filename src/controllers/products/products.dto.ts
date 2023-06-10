@@ -1,10 +1,20 @@
-export interface ProductDTO {
-  title: string,
-  description: string,
-  image: string,
-  price: number,
+import { ApiProperty } from "@nestjs/swagger"
+
+export class ProductDTO {
+  @ApiProperty()
+  title: string;
+
+  @ApiProperty()
+  description: string;
+
+  @ApiProperty()
+  image: string;
+  
+  @ApiProperty()
+  price: number;
 }
 
-export interface ProductIdDTO {
-  id: string,
+export class ProductIdDTO {
+  @ApiProperty()
+  id: string;
 }

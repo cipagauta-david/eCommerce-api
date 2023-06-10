@@ -1,15 +1,22 @@
 import { Product } from "src/types/product"
-import { ProductDTO, ProductIdDTO } from "../products/products.dto"
+import { ApiProperty } from "@nestjs/swagger";
 
-export interface ProductOrder {
-  product: Product,
-  quantity: number
+export class ProductOrder {
+  @ApiProperty()
+  product: Product;
+
+  @ApiProperty()
+  quantity: number;
 }
-export interface OrderDTO {
-  totalPrice: number,
-  products: ProductOrder[]
+export class OrderDTO {
+  @ApiProperty()
+  totalPrice: number;
+
+  @ApiProperty()
+  products: ProductOrder[];
 }
 
-export interface OrderIdDTO {
-  id: string
+export class OrderIdDTO {
+  @ApiProperty()
+  id: string;
 }
